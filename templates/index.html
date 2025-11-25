@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Evidence MVP</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <main class="container">
+        <header>
+            <h1>Clinical Evidence Aggregator</h1>
+        </header>
+        
+        <section class="search-section">
+            <form action="/analyze" method="post" class="search-box">
+                <input type="text" name="supplement" placeholder="Supplement (e.g. Creatine)" required value="{{ search_term }}">
+                <input type="number" name="age" placeholder="Age" required style="width: 80px;">
+                <button type="submit">Generate Report</button>
+            </form>
+        </section>
+
+        {% if result %}
+        <article class="report">
+            <header>
+                <h2>Report for: <span class="highlight">{{ result.supplement }}</span></h2>
+                <p class="demographic">Target Demographic: {{ result.demographic }}</p>
+            </header>
+            
+            <div class="evidence-grid">
+                {% for section in result.summary %}
+                <article class="card">
+                    <h3>{{ section.topic }}</h3>
+                    <p>
+                        {{ section.text }}
+                        <span class="citation-tooltip" data-tooltip="{{ section.citation_meta }}">
+                            [{{ section.citation_id }}]
+                        </span>
+                    </p>
+                </article>
+                {% endfor %}
+            </div>
+        </article>
+        {% endif %}
+
+    </main>
+
+</body>
+</html>

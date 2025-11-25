@@ -1,0 +1,90 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    padding-top: 50px;
+}
+
+.container {
+    width: 600px;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+h1 { text-align: center; color: #2c3e50; font-size: 1.5rem; }
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    flex-grow: 1;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover { background-color: #0056b3; }
+
+/* Report card styling */
+.report { border-top: 2px solid #eee; padding-top: 20px; }
+.highlight { color: #007bff; }
+.demographic { color: #666; font-size: 0.9rem; margin-bottom: 20px; }
+
+.card {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 4px solid #007bff;
+}
+
+.card h3 { margin-top: 0; font-size: 1.1rem; }
+
+/* Citation hover effect */
+.citation-tooltip {
+    color: #007bff;
+    font-weight: bold;
+    cursor: help;
+    position: relative;
+    border-bottom: 1px dotted #007bff;
+}
+
+/* Tooltip text (hidden by default) */
+.citation-tooltip::after {
+    content: attr(data-tooltip); /* Grab text from HTML */
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    width: max-content;
+}
+
+/* Show on hover */
+.citation-tooltip:hover::after {
+    opacity: 1;
+}
