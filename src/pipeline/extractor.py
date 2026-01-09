@@ -8,12 +8,12 @@ load_dotenv()
 # Initialize the client
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+"""
+Worker LLM:
+Takes a list of raw study dictionaries,
+Returns a list of structured JSON objects with Age, N, and Design.
+"""
 def extract_metadata(studies):
-    """
-    Step 3: The Worker LLM.
-    Takes a list of raw study dictionaries.
-    Returns a list of structured JSON objects with Age, N, and Design.
-    """
     if not studies:
         return []
 
@@ -24,7 +24,7 @@ def extract_metadata(studies):
         {
             "id": s["id"], 
             "title": s["title"], 
-            "abstract": s["abstract"][:2000] # Truncate massive abstracts to save costs
+            "abstract": s["abstract"][:2000] # Truncate abstracts to save costs
         } 
         for s in studies
     ]
@@ -36,9 +36,9 @@ def extract_metadata(studies):
     
     - id: (The same ID provided in input)
     - study_type: "RCT", "Meta-Analysis", "Systematic Review", "Observational", or "Other"
-    - min_age: (Int or null)
-    - max_age: (Int or null)
-    - mean_age: (Int or null) - Infer if mentioned like "mean age 24 +/- 2"
+    - min_age: (Int or null) - ONLY if explicitly stated (e.g. "aged 18-35"). Do NOT infer from mean.
+    - max_age: (Int or null) - ONLY if explicitly stated.
+    - mean_age: (Int or null) - Extract if stated directly or as "mean +/- SD"
     - n: (Int or null) - The sample size
     - sex: "Male", "Female", "Both", or "Unspecified"
     - outcome_summary: (String, max 15 words) - Key finding regarding the supplement
@@ -54,8 +54,8 @@ def extract_metadata(studies):
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": json.dumps(studies_input)}
             ],
-            response_format={ "type": "json_object" }, # Crucial: Forces valid JSON
-            temperature=0 # Crucial: Makes the model deterministic
+            response_format={ "type": "json_object" }, # Forces valid JSON
+            temperature=0 # Makes model deterministic
         )
 
         # Parse result
