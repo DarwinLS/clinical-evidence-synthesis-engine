@@ -11,7 +11,7 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 """
 Worker LLM:
 Takes a list of raw study dictionaries,
-Returns a list of structured JSON objects with Age, N, and Design.
+Returns a list of structured JSON objects with Age, N, and Design
 """
 def extract_metadata(studies):
     if not studies:
