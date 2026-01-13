@@ -1,6 +1,6 @@
 
 """
-Logic Engine:
+Step 4 - Logic Engine:
 Filters and ranks studies based on relevance to the user
 """
 def score_studies(studies, user_age):
@@ -24,7 +24,6 @@ def score_studies(studies, user_age):
             score += 2 # Basic baseline for existing
         
         # CRITERIA 2: AGE RELEVANCE
-        # Handle null values carefully
         min_a = study.get('min_age')
         max_a = study.get('max_age')
         mean_a = study.get('mean_age')
@@ -39,7 +38,7 @@ def score_studies(studies, user_age):
                 age_hit = True
         
         # Check Mean Match (e.g. User 25 is close to Mean 24)
-        # Only check if we haven't already hit range bonus
+        # Only if haven't hit range bonus
         if not age_hit and mean_a is not None:
             if abs(mean_a - user_age) <= 5: # Within 5 years
                 score += 10
@@ -57,12 +56,12 @@ def score_studies(studies, user_age):
             score += 2
 
         # Final Bundle
-        # Keep the original data but add the score
+        # Keep original data but add the score
         study['relevance_score'] = score
         study['scoring_reasons'] = ", ".join(reasons)
         scored_studies.append(study)
 
-    # Sort by Score (Highest first)
+    # Sort by Score (highest first)
     scored_studies.sort(key=lambda x: x['relevance_score'], reverse=True)
     
     # Return Top 5
