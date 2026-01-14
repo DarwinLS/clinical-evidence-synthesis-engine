@@ -48,9 +48,19 @@
                     <h3>{{ section.topic }}</h3>
                     <p>
                         {{ section.text }}
-                        <span class="citation-tooltip" data-tooltip="{{ section.citation_meta }}">
-                            [{{ section.citation_id }}]
-                        </span>
+                        
+                        {% for id in section.citation_ids %}
+                            {% if study_lookup[id] %}
+                                <span class="citation-tooltip" 
+                                      data-tooltip="{{ study_lookup[id].study_type }}, n={{ study_lookup[id].n }}">
+                                    [{{ id }}]
+                                </span>
+                            {% else %}
+                                <span class="citation-tooltip" data-tooltip="Source ID: {{ id }}">
+                                    [{{ id }}]
+                                </span>
+                            {% endif %}
+                        {% endfor %}
                     </p>
                 </article>
                 {% endfor %}

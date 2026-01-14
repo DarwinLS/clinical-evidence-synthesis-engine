@@ -1,18 +1,37 @@
+"""
+Step 4: The Logic Engine.
+Filters and ranks studies based on Relevance (Goal Match) + Quality + Age + Size.
+"""
+def score_studies(studies, user_age, goal="general"):
 
-"""
-Step 4 - Logic Engine:
-Filters and ranks studies based on relevance to the user
-"""
-def score_studies(studies, user_age):
     scored_studies = []
     
-    print(f"DEBUG: Scoring {len(studies)} studies for Age {user_age}...")
+    # Define keywords for boosting based on user goal
+    keywords = {
+        "strength": ["muscle", "hypertrophy", "strength", "power", "sprint", "athletic", "exercise", "resistance", "anaerobic"],
+        "cognition": ["memory", "brain", "cognitive", "depression", "anxiety", "mood", "mental", "neuro", "focus", "attention"],
+        "general": [] # General goal relies purely on study quality/age
+    }
+    
+    target_keywords = keywords.get(goal, [])
+    
+    print(f"DEBUG: Scoring {len(studies)} studies for Age {user_age}, Goal: '{goal}'...")
 
     for study in studies:
         score = 0
         reasons = []
 
-        # CRITERIA 1: STUDY DESIGN
+        # CRITERIA 1: GOAL MATCH
+        # If the user has a specific goal, heavily boost matching studies.
+        # Check both the title and the outcome summary.
+        text_blob = (study.get('title', '') + " " + study.get('outcome_summary', '')).lower()
+        
+        if target_keywords:
+            if any(word in text_blob for word in target_keywords):
+                score += 20  # Huge bonus to ensure relevant topics bubble up
+                reasons.append(f"Matches Goal: {goal}")
+
+        # CRITERIA 2: STUDY DESIGN (Quality)
         sType = study.get('study_type', '').lower()
         if "meta-analysis" in sType or "systematic review" in sType:
             score += 15
@@ -21,9 +40,9 @@ def score_studies(studies, user_age):
             score += 10
             reasons.append("High Quality (RCT)")
         else:
-            score += 2 # Basic baseline for existing
+            score += 2 # Basic baseline so no 0-score studies
         
-        # CRITERIA 2: AGE RELEVANCE
+        # CRITERIA 3: AGE RELEVANCE
         min_a = study.get('min_age')
         max_a = study.get('max_age')
         mean_a = study.get('mean_age')
@@ -38,7 +57,6 @@ def score_studies(studies, user_age):
                 age_hit = True
         
         # Check Mean Match (e.g. User 25 is close to Mean 24)
-        # Only if haven't hit range bonus
         if not age_hit and mean_a is not None:
             if abs(mean_a - user_age) <= 5: # Within 5 years
                 score += 10
@@ -47,25 +65,30 @@ def score_studies(studies, user_age):
                 score += 5
                 reasons.append("Loose Age Match")
 
-        # CRITERIA 3: SAMPLE SIZE (tie-breaker)
+        # CRITERIA 4: SAMPLE SIZE (Tie-Breaker)
         n = study.get('n')
-        if n and n > 100:
-            score += 5
-            reasons.append("Large Sample Size")
-        elif n and n > 30:
-            score += 2
+        # Ensure n is treated as an integer
+        try:
+            if n:
+                n_val = int(n)
+                if n_val > 100:
+                    score += 5
+                    reasons.append("Large Sample Size")
+                elif n_val > 30:
+                    score += 2
+        except:
+            pass # If n is 'N/A' or weird format, ignore it
 
         # Final Bundle
-        # Keep original data but add the score
         study['relevance_score'] = score
         study['scoring_reasons'] = ", ".join(reasons)
         scored_studies.append(study)
 
-    # Sort by Score (highest first)
+    # Sort by Score
     scored_studies.sort(key=lambda x: x['relevance_score'], reverse=True)
     
-    # Return Top 5
-    return scored_studies[:5]
+    # Return Top 7
+    return scored_studies[:7]
 
 # Test Block
 if __name__ == "__main__":
@@ -76,30 +99,34 @@ if __name__ == "__main__":
             "study_type": "RCT", 
             "mean_age": 22, 
             "n": 30, 
-            "outcome_summary": "Good for young athletes"
+            "title": "Creatine effects on sprint power",
+            "outcome_summary": "Improved athletic performance"
         },
         {
             "id": "222", 
             "study_type": "RCT", 
-            "min_age": 60, 
-            "max_age": 80, 
-            "n": 500, 
-            "outcome_summary": "Good for elderly"
+            "mean_age": 25, 
+            "n": 40, 
+            "title": "Creatine and memory function",
+            "outcome_summary": "Improved cognitive recall"
         },
         {
             "id": "333", 
             "study_type": "Meta-Analysis", 
             "mean_age": 25, 
             "n": 2000, 
-            "outcome_summary": "General population data"
+            "title": "General safety of creatine",
+            "outcome_summary": "No side effects found"
         }
     ]
     
     user_age = 24
-    print(f"Testing Scorer for User Age: {user_age}\n")
+    test_goal = "cognition"
     
-    ranked = score_studies(mock_extracted, user_age)
+    print(f"Testing Scorer for Age: {user_age}, Goal: {test_goal}\n")
+    
+    ranked = score_studies(mock_extracted, user_age, goal=test_goal)
     
     for i, s in enumerate(ranked):
-        print(f"#{i+1} [Score: {s['relevance_score']}] ID: {s['id']} ({s['study_type']})")
+        print(f"#{i+1} [Score: {s['relevance_score']}] ID: {s['id']}")
         print(f"   Reasons: {s['scoring_reasons']}")

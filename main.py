@@ -53,7 +53,7 @@ async def analyze_supplement(
 
     # 3. SCORE & FILTER
     # Logic Engine picks winners based on Age + Quality
-    top_studies = score_studies(extracted_data, user_age=age)
+    top_studies = score_studies(extracted_data, user_age=age, goal=goal)
     
     if not top_studies:
         return render_error(request, "Studies found, but none matched your age group/quality criteria.")
@@ -61,7 +61,6 @@ async def analyze_supplement(
     logger.info(f"Step 3 Complete: Selected Top {len(top_studies)} studies.")
 
     # 4. SYNTHESIZE
-    # Writer LLM creates the final report using specified 'goal' template
     final_report = synthesize_report(supplement, age, top_studies, goal=goal)
     
     if not final_report:
@@ -69,10 +68,35 @@ async def analyze_supplement(
 
     logger.info("Step 4 Complete: Report generated successfully.")
 
-    # RENDER RESULT
+    # SANITIZE CITATIONS
+    # Create the lookup dictionary first
+    study_lookup = {s['id']: s for s in top_studies}
+
+    # Clean LLM output before sending to Frontend
+    if final_report and "summary" in final_report:
+        for section in final_report["summary"]:
+            clean_ids = []
+            raw_ids = section.get("citation_ids", [])
+            
+            # Handle case where LLM returns a single string instead of a list
+            if isinstance(raw_ids, str):
+                raw_ids = [raw_ids]
+            
+            for raw_id in raw_ids:
+                # Force string to match dictionary keys
+                str_id = str(raw_id)
+                
+                # Only keep the ID if we actually have the study metadata
+                if str_id in study_lookup:
+                    clean_ids.append(str_id)
+            
+            # Update the section with the clean list
+            section["citation_ids"] = clean_ids
+
     return templates.TemplateResponse("index.html", {
         "request": request, 
         "result": final_report,
+        "study_lookup": study_lookup,
         "search_term": supplement,
         "search_age": age,
         "search_goal": goal

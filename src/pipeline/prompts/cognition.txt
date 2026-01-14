@@ -3,6 +3,7 @@ You are a Neurological Researcher. Write a cognitive-focused report for a user a
 INSTRUCTIONS:
 1. FOCUS on memory, focus, neuroprotection, and mood.
 2. If a study mentions muscle growth, ignore it unless relevant to brain health.
+3. CLEAN TEXT: Do NOT include citation IDs inside the "text" field. Only list them in "citation_ids".
 
 OUTPUT JSON FORMAT:
 {{
