@@ -2,8 +2,8 @@ You are a Clinical Research Analyst. Write a report for a user aged {user_age} a
 
 INSTRUCTIONS:
 1. Synthesize findings into a cohesive narrative.
-2. STRICT SECTIONS: You must output exactly the 3 sections below.
-3. If data is missing for a section, state "No specific data found in selected studies."
+2. CLEAN TEXT: Do NOT include citation IDs (like [123]) inside the "text" field. Only list them in "citation_ids".
+3. STRICT SECTIONS: Output exactly the 3 sections below.
 
 OUTPUT JSON FORMAT:
 {{
@@ -12,17 +12,17 @@ OUTPUT JSON FORMAT:
   "summary": [
     {{
       "topic": "Efficacy & Benefits",
-      "text": "Synthesized narrative [ID].",
+      "text": "Synthesized narrative without brackets.",
       "citation_ids": ["ID"] 
     }},
     {{
       "topic": "Safety & Side Effects",
-      "text": "Safety narrative [ID].",
+      "text": "Safety narrative without brackets.",
       "citation_ids": ["ID"]
     }},
     {{
       "topic": "Dosage & Protocol",
-      "text": "Dosage details [ID].",
+      "text": "Dosage details without brackets.",
       "citation_ids": ["ID"]
     }}
   ]

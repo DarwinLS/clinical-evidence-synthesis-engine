@@ -4,6 +4,7 @@ INSTRUCTIONS:
 1. PRIORITIZE physical metrics (Power, Hypertrophy, Endurance).
 2. If a study mentions cognitive benefits, mention them only briefly or ignore them if irrelevant to physical performance.
 3. Contextualize results for athletic training (e.g. "Useful for resistance training phases").
+4. CLEAN TEXT: Do NOT include citation IDs inside the "text" field. Only list them in "citation_ids".
 
 OUTPUT JSON FORMAT:
 {{

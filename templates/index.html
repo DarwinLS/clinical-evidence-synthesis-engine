@@ -16,9 +16,23 @@
         <section class="search-section">
             <form action="/analyze" method="post" class="search-box">
                 <input type="text" name="supplement" placeholder="Supplement (e.g. Creatine)" required value="{{ search_term }}">
-                <input type="number" name="age" placeholder="Age" required style="width: 80px;">
+                
+                <input type="number" name="age" placeholder="Age" required style="width: 80px;" value="{{ search_age }}">
+                
+                <select name="goal" style="padding: 10px; border-radius: 6px; border: 1px solid #ddd;">
+                    <option value="general" {% if search_goal == 'general' %}selected{% endif %}>General Health</option>
+                    <option value="strength" {% if search_goal == 'strength' %}selected{% endif %}>Strength & Hypertrophy</option>
+                    <option value="cognition" {% if search_goal == 'cognition' %}selected{% endif %}>Brain & Cognition</option>
+                </select>
+
                 <button type="submit">Generate Report</button>
             </form>
+
+            {% if error %}
+            <div style="background: #ffebee; color: #c62828; padding: 15px; border-radius: 8px; margin-top: 20px;">
+                <strong>Error:</strong> {{ error }}
+            </div>
+            {% endif %}
         </section>
 
         {% if result %}
@@ -34,9 +48,19 @@
                     <h3>{{ section.topic }}</h3>
                     <p>
                         {{ section.text }}
-                        <span class="citation-tooltip" data-tooltip="{{ section.citation_meta }}">
-                            [{{ section.citation_id }}]
-                        </span>
+                        
+                        {% for id in section.citation_ids %}
+                            {% if study_lookup[id] %}
+                                <span class="citation-tooltip" 
+                                      data-tooltip="{{ study_lookup[id].study_type }}, n={{ study_lookup[id].n }}">
+                                    [{{ id }}]
+                                </span>
+                            {% else %}
+                                <span class="citation-tooltip" data-tooltip="Source ID: {{ id }}">
+                                    [{{ id }}]
+                                </span>
+                            {% endif %}
+                        {% endfor %}
                     </p>
                 </article>
                 {% endfor %}
