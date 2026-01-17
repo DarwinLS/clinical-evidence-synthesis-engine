@@ -39,13 +39,20 @@ def synthesize_report(supplement, user_age, ranked_studies, goal="general"):
 
     # 1. Build Study Context
     context_text = ""
+    print(f"\nDEBUG: SYNTHESIZER CONTEXT CHECK")
     for study in ranked_studies:
+        print(f" - Feeding Study: {study['id']} | Title: {study['title']}...")
+
+        raw_abstract = study.get('abstract', 'No abstract available.')
+        
         context_text += f"""
         [Study ID: {study['id']}]
         Title: {study['title']}
-        Type: {study['study_type']}
-        Finding: {study['outcome_summary']}
-        Sample: n={study.get('n')}
+        Type: {study['study_type']} (n={study.get('n')})
+        
+        --- ABSTRACT START ---
+        {raw_abstract}
+        --- ABSTRACT END ---
         ---------------------
         """
 
@@ -53,7 +60,6 @@ def synthesize_report(supplement, user_age, ranked_studies, goal="general"):
     raw_template = load_prompt_template(goal)
 
     # 3. Fill in template variables
-    # using .format() to inject the user_age and supplement name into the text file
     try:
         system_prompt = raw_template.format(
             user_age=user_age, 
@@ -74,6 +80,11 @@ def synthesize_report(supplement, user_age, ranked_studies, goal="general"):
             response_format={ "type": "json_object" },
             temperature=0.2
         )
+
+        # --- TOKEN DEBUGGING ---
+        usage = response.usage
+        print(f"DEBUG [Synthesizer]: Input Tokens: {usage.prompt_tokens} | Output Tokens: {usage.completion_tokens} | Total: {usage.total_tokens}")
+        # -----------------------
 
         return json.loads(response.choices[0].message.content)
 
