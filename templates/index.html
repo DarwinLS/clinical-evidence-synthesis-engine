@@ -124,5 +124,25 @@
         {% endif %}
 
     </main>
+    
+    <div id="disclaimer-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚠️ Prototype Disclaimer</h2>
+            </div>
+            <div class="modal-body">
+                <p><strong>This is an experimental MVP.</strong></p>
+                <p>This tool uses Artificial Intelligence to synthesize clinical data. It may produce hallucinations, incorrect citations, or incomplete summaries.</p>
+                <ul>
+                    <li>Do not use this for medical advice.</li>
+                    <li>Always verify citations on PubMed.</li>
+                    <li>The extracted data has not been manually verified by a human.</li>
+                </ul>
+            </div>
+            <button id="accept-btn" class="modal-btn">I Understand & Agree</button>
+        </div>
+    </div>
+    
+    <script src="/static/script.js"></script>
 </body>
 </html>
