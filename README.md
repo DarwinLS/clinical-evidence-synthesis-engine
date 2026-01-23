@@ -1,5 +1,7 @@
 # Clinical Evidence Aggregator (MVP)
 
+[![Deploy to Render](https://img.shields.io/badge/Live_Demo-Try_it_Now-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://clinical-evidence-synthesis-engine.onrender.com/)
+
 A research engine that builds evidence-based reports on supplements by aggregating live clinical data.
 
 Unlike generic chatbots that hallucinate citations, this system retrieves raw clinical abstracts from PubMed, filters them using a **Curator LLM** based on user demographics and goals, and synthesizing a structured report where every claim is strictly tied to a source ID.
