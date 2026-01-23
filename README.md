@@ -140,9 +140,9 @@ This MVP is configured for **Render** Web Services.
 The current MVP proves the "Curator-Synthesizer" architecture works. The next phase focuses on personalization fidelity.
 
 ### High Priority
-* ** Biological Sex Filtering:** Currently, the system assumes a generic physiological baseline. We will add a `sex` parameter to the Curator to prioritize studies matching the user's biological sex (e.g., filtering out or reducing priority of male-only hypertrophy studies for female users).
-* ** Full-Text Retrieval:** Move beyond abstracts. Integration with PMC (PubMed Central) API to parse full PDF methodology sections for granular protocol extraction.
+* **Biological Sex Filtering:** Currently, the system assumes a generic physiological baseline. We will add a `sex` parameter to the Curator to prioritize studies matching the user's biological sex (e.g., filtering out or reducing priority of male-only hypertrophy studies for female users).
+* **Full-Text Retrieval:** Move beyond abstracts. Integration with PMC (PubMed Central) API to parse full PDF methodology sections for granular protocol extraction.
 
 ### Long Term
-* ** User Profiles:** Save "Watchlists" for specific supplements.
-* ** New Study Alerts:** Auto-run the Curator once a week and email users if a new "Winner" study is published in their age group.
+* **User Profiles:** Save "Watchlists" for specific supplements.
+* **New Study Alerts:** Auto-run the Curator once a week and email users if a new "Winner" study is published in their age group.
