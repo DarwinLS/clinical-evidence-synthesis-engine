@@ -11,7 +11,7 @@ Unlike generic chatbots that hallucinate citations, this system retrieves raw cl
 
 ---
 
-## ⚡ The Problem vs. The Solution
+## The Problem vs. The Solution
 
 **The Problem:** If you ask ChatGPT "Does Beta Alanine work?", it relies on training data (which is old/generic) and often hallucinates studies or ignores your specific context (e.g., age or specific fitness goal).
 
@@ -22,7 +22,7 @@ Unlike generic chatbots that hallucinate citations, this system retrieves raw cl
 
 ---
 
-## 🏗️ Architecture & Pipeline
+## Architecture & Pipeline
 
 The application logic has moved away from rigid regex scoring to a **semantic curation pipeline**:
 
@@ -51,7 +51,7 @@ The application logic has moved away from rigid regex scoring to a **semantic cu
 
 ---
 
-## 🚀 Features
+## Features
 
 * **Goal-Aware Reports:** Searching "Creatine" with the goal **"Cognition"** generates a completely different report (focusing on memory/depression) than the goal **"Strength"** (focusing on hypertrophy).
 * **Strict Citation System:** Citations are not hallucinations. They are mapped to the actual PubMed IDs retrieved in Step 1.
@@ -60,7 +60,7 @@ The application logic has moved away from rigid regex scoring to a **semantic cu
 
 ---
 
-## 🛠️ Local Setup
+## Local Setup
 
 ### Prerequisites
 * Python 3.10+
@@ -102,7 +102,7 @@ Visit `http://127.0.0.1:8000` in your browser.
 
 ---
 
-## 📦 Deployment (Render)
+## Deployment (Render)
 
 This MVP is configured for **Render** Web Services.
 
@@ -112,7 +112,7 @@ This MVP is configured for **Render** Web Services.
 
 ---
 
-## 📝 Directory Structure
+## Directory Structure
 
 ```text
 /
@@ -135,7 +135,7 @@ This MVP is configured for **Render** Web Services.
             └── cognition.txt
 ```
 
-## 🔮 Future Roadmap
+## Future Roadmap
 
 The current MVP proves the "Curator-Synthesizer" architecture works. The next phase focuses on personalization fidelity.
 
